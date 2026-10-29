@@ -1,0 +1,14 @@
+ADD LAMP "Philips" 9 E27
+ADD LAMP "Xiaomi" 15 E14
+ADD LAMP "11" 10 E14
+ADD THERMOSTAT "Bosch" -10 40
+ADD THERMOSTAT "12" -20 40
+ADD SOCKET "TP-Link" 3500
+PRINT
+REM min_temp < -11
+REM power >= 10
+PRINT
+REM manufacturer == "Bosch"
+PRINT
+REM type == SOCKET
+PRINT
