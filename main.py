@@ -90,10 +90,7 @@ class SmartSocket(SmartDevice):
         )
 
 
-class SmartHome:
-    """Хранит устройства в стандартном списке и обрабатывает команды."""
-
-    OPERATORS = {
+OPERATORS = {
         "==": operator.eq,
         "!=": operator.ne,
         ">": operator.gt,
@@ -102,23 +99,32 @@ class SmartHome:
         "<=": operator.le,
     }
 
-    NUMERIC_FIELDS = {"power", "min_temp", "max_temp", "max_load"}
-    TEXT_FIELDS = {"manufacturer", "type", "base"}
+NUMERIC_FIELDS = {"power", "min_temp", "max_temp", "max_load"}
+TEXT_FIELDS = {"manufacturer", "type", "base"}
 
-    DEVICE_TYPES = {
-        "LAMP": (SmartLamp, 3, 'ADD LAMP "производитель" мощность цоколь'),
-        "THERMOSTAT": (
-            Thermostat,
-            3,
-            'ADD THERMOSTAT "производитель" min_temp max_temp'
-            ),
-        "SOCKET": (SmartSocket, 2, 'ADD SOCKET "производитель" max_load'),
-    }
+DEVICE_TYPES = {
+    "LAMP": (SmartLamp, 3, 'ADD LAMP "производитель" мощность цоколь'),
+    "THERMOSTAT": (
+        Thermostat,
+        3,
+        'ADD THERMOSTAT "производитель" min_temp max_temp'
+        ),
+    "SOCKET": (SmartSocket, 2, 'ADD SOCKET "производитель" max_load'),
+}
+
+
+class SmartHome:
+    """Хранит устройства в стандартном списке и обрабатывает команды."""
+
+    DEVICE_TYPES   = DEVICE_TYPES
+    NUMERIC_FIELDS = NUMERIC_FIELDS
+    TEXT_FIELDS    = TEXT_FIELDS
+    OPERATORS      = OPERATORS
 
     def __init__(self):
         self.devices: list[SmartDevice] = []
 
-    def add(self, arguments):
+    def _add(self, arguments):
         if not arguments:
             raise ValueError("После ADD необходимо указать тип устройства.")
 
@@ -136,7 +142,7 @@ class SmartHome:
         device = device_class(*parameters)
         self.devices.append(device)
 
-    def remove(self, arguments):
+    def _remove(self, arguments):
         if len(arguments) != 3:
             raise ValueError("Формат удаления: REM поле оператор значение")
 
@@ -194,9 +200,9 @@ class SmartHome:
         arguments = parts[1:]
 
         if command == "ADD":
-            self.add(arguments)
+            self._add(arguments)
         elif command == "REM":
-            self.remove(arguments)
+            self._remove(arguments)
         elif command == "PRINT":
             if arguments:
                 raise ValueError("Команда PRINT не принимает параметры.")
